@@ -1,0 +1,188 @@
+.background {
+    background-image: url('Images/bg.jpg');
+    width: 100%;
+    height: 100%;
+    /* Set height to 100vh to cover the entire viewport */
+    background-size: cover;
+    background-attachment: fixed;
+    position: fixed;
+    /* Position the background fixed within the viewport */
+    top: 0;
+    left: 0;
+    z-index: -1;
+    /* Ensure the background stays behind other content */
+    filter: blur(50%);
+
+}
+
+.header {
+    /* background-color: rgb(255, 255, 255); */
+    background-color: #f1f1f1;
+    height: 8%;
+    width: 100%;
+    top: 0;
+    min-width: 160px;
+    overflow: hidden;
+    border-radius: 0px 0px 40px 40px;
+    border-bottom: solid 2px black;
+
+
+}
+
+.header-text {
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    margin: 1.5% 0% 0% 88%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    position: fixed;
+    
+
+
+}
+
+.container {
+    background-color: rgb(246, 246, 246);
+    height: 80%;
+    width: 40%;
+    margin: 2.5% 0% 0% 15%;
+    border-radius: 25px 0px 0px 25px;
+    position: fixed;
+    
+}
+
+
+input[type=email] {
+    background-color: rgba(255, 255, 255, 0.536);
+    height: 38px;
+    width: 400px;
+    border: solid rgb(121, 121, 121) 1px;
+    outline: none;
+    font-size: 13px;
+    color: rgb(121, 121, 121);
+    margin: 1% 0% 0% 19%;
+    padding-left: 12px;
+}
+
+input[type=email]::placeholder {
+    color:rgb(121, 121, 121);
+    /* Change the placeholder color */
+}
+
+input[type=email]:focus {
+    border: 2px solid rgb(0, 0, 0);
+}
+
+input[type=text] {
+    background-color: rgba(255, 255, 255, 0.536);
+    height: 38px;
+    width: 400px;
+    border: solid rgb(121, 121, 121) 1px;
+    outline: none;
+    font-size: 13px;
+    color: rgb(121, 121, 121);
+    margin: 1% 0% 0% 19%;
+    padding-left: 12px;
+}
+
+input[type=text]::placeholder {
+    color: rgb(121, 121, 121);
+    /* Change the placeholder color */
+}
+
+input[type=text]:focus {
+    border: 2px solid rgb(0, 0, 0);
+}
+
+input[type=number] {
+    background-color: rgba(255, 255, 255, 0.536);
+    height: 38px;
+    width: 400px;
+    border: solid rgb(121, 121, 121) 1px;
+    outline: none;
+    font-size: 13px;
+    color: rgb(121, 121, 121);
+    margin: 1% 0% 0% 19%;
+    padding-left: 12px;
+  }
+  input[type=number]:focus {
+    border: 3px solid rgb(121, 121, 121);
+  }
+
+  input[type=password] {
+    background-color: rgba(255, 255, 255, 0.536);
+    height: 38px;
+    width: 400px;
+    border: solid rgb(121, 121, 121) 1px;
+    outline: none;
+    font-size: 13px;
+    color: rgb(121, 121, 121);
+    margin: 1% 0% 0% 19%;
+    padding-left: 12px;
+  }
+
+  input[type=password]:focus {
+    border: 3px solid rgb(121, 121, 121);
+  }
+
+input[type=submit] {
+    width: 20%;
+    background-color: rgb(100, 222, 233);
+    color: white;
+    font-style: bold;
+    font-size: 16px;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin:  3% 0% 0% 38%;;
+  }
+  
+  input[type=submit]:hover {
+    background-color:  rgb(90, 185, 193);
+  }
+
+  /* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 25px;
+    width: 70%;
+    height: 55%;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
