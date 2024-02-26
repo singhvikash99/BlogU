@@ -25,13 +25,14 @@
         </div>
 
         <div class="container">
+            
             <div
                 style="color: rgb(90, 185, 193);font-weight: bold;font-size: 30px;margin: 20% 0% 0% -6%;top: 5;text-align: center;">
                 Log In</div>
             <div style="margin: 1% 0% 0% -5%;text-align: center;font-weight: bolder;">Enter your valid credential for
                 logging in</div>
             <div style="text-align: center;margin: 6% 0% 0% -37%;font-weight: bolder;">Enter your email address</div>
-            <form action="">
+            <form action="" , method="post">
 
                 <input type="email" name="Email" placeholder="name@example.com"><br>
                 <div style="margin: 5% 0% 0% -41%;text-align: center;font-weight: bolder;">Enter your password</div>
@@ -50,13 +51,15 @@
         <div class="modal-content">
             <span class="close">&times;</span><br>
                 <h2>Create New BlogU Account</h2>
+                <p style="margin: 4% 0% 0% 12%; position: fixed; color: red;">{{err_msg}}</p>
             <form action="/user/signup/" method="post">
-                <input type="text" name="f-name" placeholder="First Name.." required style="margin-left: -0px;"><br>
-                <input type="text" name="l-name" placeholder="Last Name.." required style="margin-left: 0px;"><br>
+                <input type="text" name="f_name" placeholder="First Name.." required style="margin-left: -0px;"><br>
+                <input type="text" name="l_name" placeholder="Last Name.." required style="margin-left: 0px;"><br>
                 <input type="email" name="email" placeholder="Email.." required style="margin-left: 0px;"><br>
                 <input type="number" name="contact" placeholder="Contact.." maxlength="10" required style="margin-left: 0px;"><br>
                 <input type="password" name="password" placeholder="Password.." style="margin-left: 0px;"><br>
-                <input type="submit" value="Create Account" style="margin: 1% 0% 0% 0%;">
+                <input type="text" name="username" placeholder="username.." style="margin-left: 0px;"><br>
+                <input type="submit" value="Create Account">
             </form>
         </div>
 
