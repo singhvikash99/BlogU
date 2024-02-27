@@ -1,18 +1,69 @@
 from flask import Flask, render_template, request, redirect
-import models, db
+import models, db, utils
+from flask_login import LoginManager,login_user,logout_user,login_required,current_user
 from sqlalchemy import select
 from datetime import datetime
 
 app=Flask(__name__)
 
+app.config["SECRET_KEY"] = "3jkshejkfhwleowjefkwe"
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def loader_user(user_id, db = db.db_session()):
+    user = db.get(models.Users, user_id)
+    db.close()
+    return user
+
+
+
 @app.route('/')
 def index():
     return render_template("index.html")
 
-@app.route('/user/login/')
-def user_login():
-    pass
-    return render_template("index.html")
+@app.route('/user/login/', methods=["POST"])
+def user_login(db = db.db_session()):
+    try:
+        login_data = dict(request.form)
+        user_name = login_data['Email']
+        password = login_data["Password"]
+
+        db_user = select(models.Users).where(models.Users.Email == user_name)
+        db_user = db.scalars(db_user).all()
+
+        #if user does not exists in databse
+        if db_user == []:
+            db.close()
+            return render_template("index.html", err_msg = f"{user_name} does not exist")
+        
+        #if user exist
+        db_user = db_user[0]
+        hashed_pass = db_user.Pass
+
+        verify_pass = utils.verify_pass(password, hashed_pass)
+        if verify_pass == False:
+            db.close()
+            return render_template("index.html", err_msg = "Wrong password! Try again")
+        login_user(db_user)
+        db.close()
+        return redirect("/home/")
+    except Exception as err:
+        db.close()
+        return {"details" : str(err)}
+
+@app.route('/home/')
+@login_required
+def user_home():
+    return render_template("home.html")
+
+
+@app.route('/user/logout/')
+@login_required
+def user_logout():
+    logout_user()
+    return redirect('/')
 
 @app.route('/user/signup/', methods=["POST"])
 def user_signup(db = db.db_session()): #db is filename, db_session is defined funtion to start a session
@@ -20,6 +71,7 @@ def user_signup(db = db.db_session()): #db is filename, db_session is defined fu
         form_data = dict(request.form)
 
         db_user = select(models.Users).where(models.Users.Email == form_data["email"])
+        db_user=db.scalars(db_user).all()
         if db_user != []:
             db.close()
             return render_template ("index.html", err_msg = f"User with {form_data['email']} already exists")
@@ -28,11 +80,11 @@ def user_signup(db = db.db_session()): #db is filename, db_session is defined fu
         new_user.First_name = form_data["f_name"]
         new_user.Last_name = form_data["l_name"]
         new_user.Email = form_data["email"]
+        new_user.Username = form_data["email"]
         new_user.Ph_no = form_data["contact"]
-        new_user.Pass = form_data["password"]
+        new_user.Pass = utils.get_hashed_pass(form_data["password"])
         new_user.Created_at = datetime.now()
         new_user.Updated_at = datetime.now()
-        new_user.Username = form_data["username"]
         db.add(new_user)
         db.commit()
         db.close()
