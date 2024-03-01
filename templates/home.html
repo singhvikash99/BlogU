@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
     <title>BlogU-Home</title>
 </head>
@@ -11,15 +12,188 @@
 <body>
     <div class="background">
         <!-- <img src="{{ url_for('static', filename='Images/container.jpg') }}" style="height: 80%; width: 30%;margin: 6.5% 0% 0% 55%;;border-radius: 0px 25px 25px 0px; position: fixed;"> -->
-        
+
         <div class="header">
-            <div class="header-text" style="margin: 1% 0% 0% 15%;font-size: 28px;">BlogU</div>
+            <a href="/home/"><div class="header-text" style="margin: 1% 0% 0% 15%;font-size: 28px;">BlogU</div></a>
             <div class="header-text" style="margin: 1.5% 0% 0% 81%;">Contact</div>
             <div class="header-text" style="margin-left: 76%;">About</div>
             <div class="header-text" style="margin-left: 71%;">Blogs</div>
             <div class="header-text" style="margin-left: 66%;">Home</div>
+
+
+            <div class="dropdown">
+                <i class="fa fa-user-o" aria-hidden="true"
+                    style="margin: 0.8% 0% 0% -0.1%;position: absolute; z-index: 2;"></i>
+                <button class="dropbtn">{{current_user.First_name}}
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="#">Create Blog</a>
+                    <a href="#">My Blogs</a>
+                    <a href="#" id="changePassLink" onclick="openPassDiv()">Change Password</a>
+                    <a href="#" id="editLink" onclick="openProfileDiv()">Edit Profile</a>
+                    <a href="/user/logout/">Logout</a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- The edit profile Modal -->
+    <div id="editProfileDiv" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content" style="height: 50%;">
+            <span class="close1">&times;</span><br>
+            <h2>Edit Profile</h2>
+
+            <form action='/user/update/' method="post">
+                <input type="text" name="f_name" value="{{current_user.First_name}}" required
+                    style="margin-left: -0px; font-weight: bold;color: black;"><br>
+                <input type="text" name="l_name" value="{{current_user.Last_name}}" required
+                    style="margin-left: 0px;font-weight: bold;color: black;"><br>
+                <input type="email" name="email" value="{{current_user.Email}}" readonly style="margin-left: 0px;"><br>
+                <input type="number" name="contact" value="{{current_user.Ph_no}}" maxlength="10" required
+                    style="margin-left: 0px;font-weight: bold;color: black;"><br>
+                <input type="submit" value="Save Changes" style="margin-left: 0%;">
+
+            </form>
         </div>
 
+    </div>
+
+    <!-- The pass change Modal -->
+    <div id="changePasswordDiv" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content" style="height: 40%;">
+            <span class="close">&times;</span><br>
+            <h2>Change Password</h2>
+
+            <form action='/user/changepassword/' method="post">
+                <p id="errorMsg" style="color: red;"></p>
+                <p id="successMsg" style="color: green;"></p>
+                <br>
+                <input type="password" name="OldPassword" placeholder="Old Password.." id="OldPwd"
+                    style="margin-left: -5px;">
+                <i id="OldPwd_icon" class="fa fa-eye" onclick="OldPasswordToggle()" aria-hidden="true" width="1%"
+                    height="1%" style="display: inline; 
+                                     margin-left: -2.5%; 
+                                     vertical-align: middle"></i><br>
+
+                <input type="password" name="NewPassword" placeholder="New Password.." id="NewPwd"
+                    style="margin-left: -5px;">
+                <i id="NewPwd_icon" class="fa fa-eye" onclick="NewPasswordToggle()" aria-hidden="true" width="1%"
+                    height="1%" style="display: inline; 
+                     margin-left: -2.5%; 
+                     vertical-align: middle"></i><br>
+                <input type="submit" value="Save Changes" style="margin-left: 0%;">
+
+            </form>
+        </div>
+
+    </div>
+    <script>
+        //edit Profile-->
+        function openProfileDiv() {
+            // Get the modal 
+            var modal = document.getElementById("editProfileDiv");
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("editLink");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close1")[0];
+
+            // When the user clicks the button, open the modal 
+            modal.style.display = "block";
+
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+
+        //Updatepass-->
+        function openPassDiv() {
+            // Get the modal 
+            var modal = document.getElementById("changePasswordDiv");
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("changePassLink");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal 
+            modal.style.display = "block";
+
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+        function OldPasswordToggle() {
+            let pwd_field = document.getElementById("OldPwd");
+            let icon = document.getElementById("OldPwd_icon");
+            if (pwd_field.type == "password") {
+                pwd_field.type = "text";
+                icon.className = "fa fa-eye-slash";
+            } else {
+                pwd_field.type = "password";
+                icon.className = "fa fa-eye";
+            }
+
+        }
+
+        function NewPasswordToggle() {
+            let pwd_field = document.getElementById("NewPwd");
+            let icon = document.getElementById("NewPwd_icon");
+            if (pwd_field.type == "password") {
+                pwd_field.type = "text";
+                icon.className = "fa fa-eye-slash";
+            } else {
+                pwd_field.type = "password";
+                icon.className = "fa fa-eye";
+            }
+
+        }
+    </script>
+
+    {% if args %}
+    <script>
+        openPassDiv()
+        var error_p = document.getElementById("errorMsg");
+        error_p.innerHTML = "Old Password does not match, Try Again";
+    </script>
+    {% endif %}
+
+    {% if successMsg %}
+    <script>
+        openPassDiv()
+        var success_p = document.getElementById("successMsg");
+        success_p.innerHTML = "Password successfully changed";
+    </script>
+    {% endif %}
 </body>
 
 </html>

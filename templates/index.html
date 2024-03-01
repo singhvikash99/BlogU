@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>BlogU-Home</title>
 </head>
 
 <body>
     <div class="background">
         <!-- <img src="{{ url_for('static', filename='Images/container.jpg') }}" style="height: 80%; width: 30%;margin: 6.5% 0% 0% 55%;;border-radius: 0px 25px 25px 0px; position: fixed;"> -->
-        
+
         <div class="header">
             <div class="header-text" style="margin: 1% 0% 0% 15%;font-size: 28px;">BlogU</div>
             <div class="header-text" style="margin: 1.5% 0% 0% 81%;">Contact</div>
@@ -20,48 +21,64 @@
             <div class="header-text" style="margin-left: 66%;">Home</div>
         </div>
 
-        <div><img src="{{ url_for('static', filename='Images/container.jpg') }}" style="height: 80%; width: 30%;margin: 2.5% 0% 0% 55%;;border-radius: 0px 25px 25px 0px; position: fixed;">
-    
-        </div>
+
 
         <div class="container">
-            <p style="margin: 4% 0% 0% 12%; position: fixed; color: red;">{{err_msg}}</p>
-            
+            <p style="margin-top: 10%;  display: flex; justify-content: center; align-items: center; color: red; top: 0%; transform: translateY(-50%);">{{err_msg}}</p>
+            <p style="margin-top: 3%;  display: flex; justify-content: center; align-items: center; color:green; top: 0%; transform: translateY(-50%);">{{succ_msg}}</p>
+
             <div
-                style="color: rgb(90, 185, 193);font-weight: bold;font-size: 30px;margin: 20% 0% 0% -6%;top: 5;text-align: center;">
+                style="color: rgb(90, 185, 193);font-weight: bold;font-size: 30px;margin: 5% 0% 0% 0%;top: 5;text-align: center;">
                 Log In</div>
-            <div style="margin: 1% 0% 0% -5%;text-align: center;font-weight: bolder;">Enter your valid credential for
+            <div style="margin: 1% 0% 0% 0%;text-align: center;font-weight: bolder;">Enter your valid credential for
                 logging in</div>
-            <div style="text-align: center;margin: 6% 0% 0% -37%;font-weight: bolder;">Enter your email address</div>
-            
+            <div style="text-align: center;margin: 6% 0% 0% -36%;">Enter your email address</div>
+
             <form action="/user/login/" , method="post">
 
-                <input type="email" name="Email" placeholder="name@example.com"><br>
-                <div style="margin: 5% 0% 0% -41%;text-align: center;font-weight: bolder;">Enter your password</div>
-                <input type="text" name="Password" placeholder="Password"><br>
-                <input type="submit" value="Login">
-                <p style="margin: 2% 0% 0% 33%;">Don't have an account? <a href="#" id="signupLink" style="color: rgb(90, 185, 193);text-decoration: none;">Signup!</a></p>
+                <input type="email" id="Email" name="Email" placeholder="name@example.com"
+                    onchange="updateForgotLink()"><br>
+                <div style="margin: 5% 0% 0% -40%;text-align: center;">Enter your password</div>
+                <input type="text" name="Password" placeholder="Password" id="Lpwd"><i id="Lpwd_icon" class="fa fa-eye"
+                    onclick="LpasswordToggle()" aria-hidden="true" width="1%" height="1%" style="display: inline; 
+                                 margin-left: -3%; 
+                                 vertical-align: middle"></i><br>
+                <input type="submit" value="Login" style="margin: 2% 0% 0% 41%;">
+                <p style="margin: 2% 0% 0% 0%;text-align: center;">Don't have an account? <a href="#" id="signupLink"
+                        style="color: rgb(90, 185, 193);text-decoration: none;">Signup!</a></p>
+                <br>
+                <a href="#" id="forgotLink"
+                    style="color: rgb(90, 185, 193);text-decoration: none; margin: 0% 0% 0% 42.5%;">Reset password</a>
+
             </form>
 
-            <div style="background-color: grey; height: 3px;width: 20%;border-radius: 500px; margin: 4% 0% 0% 38.5%;"></div>
+            <div style="background-color: grey; height: 3px;width: 50%;border-radius: 500px; margin: 4% auto 0 auto;">
+            </div>
         </div>
     </div>
 
-     <!-- The Modal -->
-     <div id="signupDiv" class="modal">
+
+    <!-- The Signup Modal -->
+    <div id="signupDiv" class="modal">
 
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span><br>
-                <h2>Create New BlogU Account</h2>
-                
+            <h2>Create New BlogU Account</h2>
+
             <form action="/user/signup/" method="post">
                 <input type="text" name="f_name" placeholder="First Name.." required style="margin-left: -0px;"><br>
                 <input type="text" name="l_name" placeholder="Last Name.." required style="margin-left: 0px;"><br>
                 <input type="email" name="email" placeholder="Email.." required style="margin-left: 0px;"><br>
-                <input type="number" name="contact" placeholder="Contact.." maxlength="10" required style="margin-left: 0px;"><br>
-                <input type="password" name="password" placeholder="Password.." style="margin-left: 0px;"><br>
+                <input type="number" name="contact" placeholder="Contact.." maxlength="10" required
+                    style="margin-left: 0px;"><br>
+                <input type="password" name="password" placeholder="Password.." id="pwd" style="margin-left: -5px;">
+                <i id="pwd_icon" class="fa fa-eye" onclick="passwordToggle()" aria-hidden="true" width="1%" height="1%"
+                    style="display: inline; 
+                                     margin-left: -2.5%; 
+                                     vertical-align: middle"></i><br>
                 <input type="submit" value="Create Account" style="margin-left: 0%;">
+
             </form>
         </div>
 
@@ -69,6 +86,12 @@
 
 
     <script>
+        function updateForgotLink() {
+            console.log("Onchane Hitted");
+            var email = document.getElementById("Email").value;
+            var forgetLink = document.getElementById("forgotLink");
+            forgetLink.href = `/user/forgtopassword/?email=${email}`;
+        }
         // Get the modal
         var modal = document.getElementById("signupDiv");
 
@@ -94,6 +117,39 @@
                 modal.style.display = "none";
             }
         }
+
+
+        function passwordToggle() {
+            let pwd_field = document.getElementById("pwd");
+            let icon = document.getElementById("pwd_icon");
+            if (pwd_field.type == "password") {
+                pwd_field.type = "text";
+                icon.className = "fa fa-eye-slash";
+            } else {
+                pwd_field.type = "password";
+                icon.className = "fa fa-eye";
+            }
+
+        }
+
+        function LpasswordToggle() {
+            let pwd_field = document.getElementById("Lpwd");
+            let icon = document.getElementById("Lpwd_icon");
+            if (pwd_field.type == "password") {
+                pwd_field.type = "text";
+                icon.className = "fa fa-eye-slash";
+            } else {
+                pwd_field.type = "password";
+                icon.className = "fa fa-eye";
+            }
+
+        }
+
+
+
+
+
+
     </script>
 </body>
 
