@@ -31,7 +31,7 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="#" id="blogLink" onclick="createBlogDiv()">Create Blog</a>
-                    <a href="/home/myblogs">My Blogs</a>
+                    <a href="/home/">Home</a>
                     <a href="#" id="changePassLink" onclick="openPassDiv()">Change Password</a>
                     <a href="#" id="editLink" onclick="openProfileDiv()">Edit Profile</a>
                     <a href="/user/logout/">Logout</a>
@@ -114,18 +114,25 @@
                 <div class="modal-content no-scrollbar {% if i.blogs_category.category == 'SCIENCE' %} SCIENCE {% elif i.blogs_category.category == 'TECHNOLOGY' %} TECHNOLOGY {% elif i.blogs_category.category == 'PHILOSPHY' %} PHILOSPHY {% elif i.blogs_category.category == 'FOOD' %} FOOD {% elif i.blogs_category.category == 'TRAVEL' %} TRAVEL {% elif i.blogs_category.category == 'GENERAL' %} GENERAL {% endif %}"
                     style="max-height: 80vh; overflow-y: auto; padding: 3%; height: 76%; width: 66%; margin-top: -0.9%;margin-left: 14.8%;">
                     <span class="blogViewClose">&times;</span><br>
-                    <i class="fa fa-user-o" aria-hidden="true"
-                        style="font-size:  20px; color: #adadad; font-weight: bold;margin: 0% 0% 0% -90%;"></i>&nbsp;
-                    <em style="color:whitesmoke;">
-                        ~{{i.blogs_user.First_name}}</em>
+                    <h2 style="color: white;">Update Blog</h2>
+                    <form action='/blogs/update/?blog_id={{i.id}}' method="post">
+                        <div style="display: flex; justify-content: center; margin: 5% 0% 0% -23%;">
+                            <input type="text" name="blog_title" value="{{i.title}}" required style="width: 60%; background-color: white; color: black;">
+                        </div><br>
+                        <div style="display: flex; justify-content: center; margin: 0% 0% 0% -23%;;">
+                        <select name="category" required style="width: 61.2%;">
+                            <option value="{{i.blogs_category.id}}">{{i.blogs_category.category}}</option>
+                            {% for k in categories if k.id != i.blogs_category.id %}
+                            <option value="{{k.id}}">{{k.category}}</option>
+                            {% endfor %}
 
+                        </select> </div><br>
 
-                    <h2 style="border-bottom: 1px solid white; color: white; font-size: 35px;">{{i.title}}</h2>
-                    <div class="blurred-background">
-                        <p class="blurred-content">
-                            {{i.content}}
-                        </p>
-                    </div>
+                        <textarea name="blog_content" id="" cols="30" rows="10" required style="width: 75%; margin-top: 1%;">{{i.content}} </textarea>
+                        <input type="submit" value="Update Blog">
+                        <a class="delete" href="/blogs/delete/?blog_id={{i.id}}">Delete</a>
+
+                    </form>
 
                 </div>
 
