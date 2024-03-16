@@ -65,12 +65,8 @@ def user_home(db = db.db_session()):
                 models.Category.category
                 )).options(
             joinedload(models.Blogs.blogs_responses).load_only(
-                models.Response.response_type, models.Response.user_id
-                )).options(
-            joinedload(models.Blogs.blogs_responses).load_only(
-                models.Response.response_arg, models.Response.user_id
-                )).options(
-            joinedload(models.Blogs.blogs_responses).joinedload(models.Response.responses_users).load_only(
+                models.Response.response_type, models.Response.user_id, models.Response.response_arg
+                ).joinedload(models.Response.responses_users).load_only(
                 models.Users.First_name
                 ))
 
@@ -277,8 +273,8 @@ def update_post(db = db.db_session()):
         form_data = dict(request.form)
         blog_id = int(request.args.get("blog_id"))
 
-        db_blog = db.get(models.Blogs,blog_id)
-        db_title = form_data['blog_title']
+        db_blog = db.get(models.Blogs, blog_id)
+        db_blog.title = form_data['blog_title']
         db_blog.content = form_data['blog_content']
         db_blog.category_id = form_data['category']
         db_blog.updated_at = datetime.now()
@@ -343,6 +339,7 @@ def like_blog(db = db.db_session()):
         new_resp.blog_id = blog_id
         new_resp.user_id = current_user.id 
         new_resp.response_type = 1
+        
         db.add(new_resp)
         db.commit()
         db.close()
