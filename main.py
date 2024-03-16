@@ -66,6 +66,12 @@ def user_home(db = db.db_session()):
                 )).options(
             joinedload(models.Blogs.blogs_responses).load_only(
                 models.Response.response_type, models.Response.user_id
+                )).options(
+            joinedload(models.Blogs.blogs_responses).load_only(
+                models.Response.response_arg, models.Response.user_id
+                )).options(
+            joinedload(models.Blogs.blogs_responses).joinedload(models.Response.responses_users).load_only(
+                models.Users.First_name
                 ))
 
     db_blogs = db_blogs.order_by(models.Blogs.updated_at.desc())
@@ -244,7 +250,13 @@ def my_blogs( db = db.db_session()):
                     )).options(
                 joinedload(models.Blogs.blogs_responses).load_only(
                     models.Response.response_type, models.Response.user_id
-                    ))
+                    )).options(
+            joinedload(models.Blogs.blogs_responses).load_only(
+                models.Response.response_arg, models.Response.user_id
+                )).options(
+            joinedload(models.Blogs.blogs_responses).joinedload(models.Response.responses_users).load_only(
+                models.Users.First_name
+                ))
 
         db_blogs = db_blogs.order_by(models.Blogs.updated_at.desc())
         
@@ -268,7 +280,7 @@ def update_post(db = db.db_session()):
         db_blog = db.get(models.Blogs,blog_id)
         db_title = form_data['blog_title']
         db_blog.content = form_data['blog_content']
-        db_blog.category_id = form_data[category]
+        db_blog.category_id = form_data['category']
         db_blog.updated_at = datetime.now()
 
         db.commit()
@@ -303,9 +315,14 @@ def delete_post(db = db.db_session()):
         return {"details" : str(err)}
 
 @app.route('/blogs/like/')
+@login_required
 def like_blog(db = db.db_session()):
     try:
+        res = {"home":"/home/", "blogs":"/home/myblogs/"}
+
+
         blog_id = request.args.get("blog_id")
+        location = request.args.get("location")
         
         db_blog = select(models.Blogs).where((models.Blogs.id == blog_id), (models.Blogs.is_deleted == 0))
         db_blog = db.scalars(db_blog).all()
@@ -314,13 +331,13 @@ def like_blog(db = db.db_session()):
             db.close()
             return {"details" : str(err)}
         
-        db_response = select(models.Response).where((models.Response.blog_id == blog_id), (models.Response.response_type == 1), (models.Response.user_id))
+        db_response = select(models.Response).where((models.Response.blog_id == blog_id), (models.Response.response_type == 1), (models.Response.user_id == current_user.id))
         db_response = db.scalars(db_response).first()
         if db_response:
             db.delete(db_response)
             db.commit()
             db.close()
-            return redirect('/home/')
+            return redirect(res[location])
 
         new_resp = models.Response()
         new_resp.blog_id = blog_id
@@ -330,11 +347,40 @@ def like_blog(db = db.db_session()):
         db.commit()
         db.close()
 
-        return redirect ('/home/')
+        return redirect(res[location])
 
     except Exception as err:
         db.close()
         return {"details" : str(err)}, 403
+
+@app.route('/blogs/comment/', methods=["POST"])
+def comment_blog(db = db.db_session()):
+    try:
+        blog_id = request.args.get("blog_id")
+        user_id = current_user.id 
+        comment_text = request.form.get("comment_text")
+
+
+        new_comment = models.Response()
+        new_comment.blog_id = blog_id
+        new_comment.user_id = user_id
+        new_comment.response_type = 2
+        new_comment.response_arg = comment_text
+
+        
+        
+        db.add(new_comment)
+        db.commit()
+        db.close()
+        return redirect('/home/')
+
+
+    except Exception as err:
+        db.close()
+        return {"details" : str(err)}, 403
+
+
+
 
 
 if __name__=="__main__":

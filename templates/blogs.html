@@ -87,11 +87,11 @@
                         {% endfor %}
                         {% if current_user.id in temp %}
                         <i id="like-icon-{{i}}" class="fa fa-thumbs-up util-icon" aria-hidden="true"
-                            onclick="callLike('{{i}}', '/blogs/like/?blog_id={{i.id}}')"></i>&nbsp;
+                            onclick="callLike('{{i}}','/blogs/like/?blog_id={{i.id}}&location=blogs')"></i>&nbsp;
                         {% else %}
 
                         <i id="like-icon-{{i}}" class="fa fa-thumbs-o-up util-icon" aria-hidden="true"
-                            onclick="callLike('{{i}}', '/blogs/like/?blog_id={{i.id}}')"></i>&nbsp;
+                            onclick="callLike('{{i}}','/blogs/like/?blog_id={{i.id}}&location=blogs')"></i>&nbsp;
 
                         {% endif %}
 
@@ -99,15 +99,33 @@
 
                         <p style="color: white; margin: 6px 5px 0 -10px; min-width: 20px; text-align: center;">
                             {{temp|length}}</p>&nbsp;
-                        <i class="fa fa-comments util-icon" aria-hidden="true"></i>
+                        <i class="fa fa-comments util-icon" aria-hidden="true" onclick="toggleComment(this)"></i>
                     </div>
+                </div>
+
+                <div class="comment_container">
+                    <div class="comments">
+                        {% for comment in i.blogs_responses %}
+                        {% if comment.response_arg %}
+                        <div class="comment">
+                            <p style="font-size: 13px;"><b>{{comment.responses_users.First_name}}:</b>&nbsp;&nbsp;<em>{{ comment.response_arg }}</em></p>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <form id="comment_form_{{i.id}}" action='/blogs/comment/?blog_id={{i.id}}' method="post">
+                        <input type="text" name="comment_text" placeholder="Share your thoughts..."
+                            style="width: 70%; margin: 4% 0% 0% 0%; ">
+                        <input type="submit" value="Post"
+                            style="width: 20%; margin: 4% 0% 0% 0%;">
+                    </form>
                 </div>
 
 
             </div>
 
 
-            <!-- -- Blog View Modal -- -->
+            <!-- -- Blog Edit Modal -- -->
             <div id="blogViewDiv-{{i}}" class="modal " style="overflow-y: scroll;">
 
                 <!-- Modal content -->
@@ -137,7 +155,7 @@
                 </div>
 
             </div>
-            <!-- -- Blog View Modal end here -- -->
+            <!-- -- Blog Edit Modal end here -- -->
             {% endfor %}
 
         </div>
@@ -402,7 +420,19 @@
             window.location.href = url;
         }
 
+        function toggleComment(icon) {
+            // Get the parent blog_content div
+            var blogContent = icon.closest('.blog_content');
+            // Find the .comment div within the same parent
+            var commentSection = blogContent.querySelector('.comment_container');
 
+            // Toggle the visibility of the comment section
+            if (commentSection.style.display === 'block') {
+                commentSection.style.display = 'none';
+            } else {
+                commentSection.style.display = 'block';
+            }
+        }
 
 
 

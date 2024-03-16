@@ -391,7 +391,7 @@ input[type=submit]:hover {
   
   
   padding: 14px;
-  color: #adadad;
+ 
 
 
 
@@ -523,7 +523,43 @@ input[type=submit]:hover {
   background-color: rgb(245, 79, 8);
 }
 
+
+
+
+
+
 /* HOME SEARCH BAR */
 
 
 /* HOME SEARCH BAR */
+
+.comment_container{
+  display: none; 
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  height: 48%;
+  margin: -70% 0% 0% -3%;
+  padding: 10px;
+  border-radius: 10px;
+}
+.comments {
+  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 60%; /* Limit the height of the comments section */
+  
+  
+  
+  
+}
+
+.comment {
+  
+  padding: 10px;
+  margin-bottom: 5px;
+  
+  
+}
+
+.comment p {
+  margin: 0; /* Remove default margin for paragraphs inside comments */
+}
+
