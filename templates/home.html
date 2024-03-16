@@ -11,8 +11,6 @@
 
 <body>
     <div class="background">
-        <!-- <img src="{{ url_for('static', filename='Images/container.jpg') }}" style="height: 80%; width: 30%;margin: 6.5% 0% 0% 55%;;border-radius: 0px 25px 25px 0px; position: fixed;"> -->
-
         <div class="header">
             <a href="/home/">
                 <div class="header-text" style="margin: 1% 0% 0% 15%;font-size: 28px;">BlogU</div>
@@ -51,8 +49,12 @@
         <!-- blog content ends here -->
         <div class="blog_container">
             {% for i in blog_data %}
+
+
             <div
                 class="blog_content {% if i.blogs_category.category == 'SCIENCE' %} SCIENCE {% elif i.blogs_category.category == 'TECHNOLOGY' %} TECHNOLOGY {% elif i.blogs_category.category == 'PHILOSPHY' %} PHILOSPHY {% elif i.blogs_category.category == 'FOOD' %} FOOD {% elif i.blogs_category.category == 'TRAVEL' %} TRAVEL {% elif i.blogs_category.category == 'GENERAL' %} GENERAL {% endif %}">
+
+
                 <div class="blog_util" style="display: flex;align-items: center;">
                     <i class="fa fa-user-o" aria-hidden="true"
                         style="font-size:  20px; color: #adadad; font-weight: bold;"></i>&nbsp; <em
@@ -61,6 +63,8 @@
 
                     <p style="margin-left:55% ;font-size: 13px;color: white;">{{ i.created_at.strftime('%d-%m-%Y') }}
                     </p>
+
+
                 </div><br><br><br>
 
                 <div class="blog_util" style="text-align: center; color: white;"><b>{{i.title|truncate(40)}}</b>
@@ -74,6 +78,8 @@
                     onclick="openBlogViewDiv('blogViewDiv-{{i}}')">{{i.content}}</div>
                 {% endif %}
 
+
+
                 <br><br>
                 <div class="blog_util" style="display: flex; align-items: center;">
                     <p style="font-size: 11px; background-color: #adadad; padding: 2px; text-align: center; margin: 0;">
@@ -82,29 +88,80 @@
 
                     <div style="display: flex; align-items: center; margin-left: auto;">
                         {% set temp = [] %}
-                        {% for j in i.blogs_responses if j.response_type ==1 %}
+                        {% for j in i.blogs_responses if j.response_type == 1 %}
                         {% set _ = temp.append(j.user_id) %}
                         {% endfor %}
                         {% if current_user.id in temp %}
                         <i id="like-icon-{{i}}" class="fa fa-thumbs-up util-icon" aria-hidden="true"
-                            onclick="callLike('{{i}}', '/blogs/like/?blog_id={{i.id}}')"></i>&nbsp;
+                            onclick="callLike('{{i}}','/blogs/like/?blog_id={{i.id}}&location=home')"></i>&nbsp;
                         {% else %}
 
                         <i id="like-icon-{{i}}" class="fa fa-thumbs-o-up util-icon" aria-hidden="true"
-                            onclick="callLike('{{i}}', '/blogs/like/?blog_id={{i.id}}')"></i>&nbsp;
+                            onclick="callLike('{{i}}','/blogs/like/?blog_id={{i.id}}&location=home')"></i>&nbsp;
 
                         {% endif %}
 
 
 
                         <p style="color: white; margin: 6px 5px 0 -10px; min-width: 20px; text-align: center;">
-                            {{temp|length}}</p>&nbsp;
-                        <i class="fa fa-comments util-icon" aria-hidden="true"></i>
+                            {{temp|length}}
+                        </p>&nbsp;
+
+
+                        <i class="fa fa-comments util-icon" aria-hidden="true" onclick="toggleComment(this)"></i>&nbsp;
+
+                        <!-- Counting comments -->
+                        {% set temp_comments = [] %}
+                        {% for j in i.blogs_responses if j.response_type == 2 %}
+                        {% set _ = temp_comments.append(j.user_id) %}
+                        {% endfor %}
+                        <p style="color: white; margin: 6px 5px 0 -10px; min-width: 20px; text-align: center;">
+                            {{temp_comments|length}}
+                        </p>
+
+
+
+
+
+
+
                     </div>
+
+
+                </div>
+
+                <div class="comment_container">
+                    <div class="comments">
+                        {% for comment in i.blogs_responses %}
+                        {% if comment.response_arg %}
+                        <div class="comment">
+                            <p style="font-size: 13px;"><b>{{comment.responses_users.First_name}}:</b>&nbsp;&nbsp;<em>{{
+                                    comment.response_arg }}</em></p>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+
+
+                    <form id="comment_form_{{i.id}}" action='/blogs/comment/?blog_id={{i.id}}' method="post">
+                        <input type="text" name="comment_text" placeholder="Share your thoughts..."
+                            style="width: 70%; margin: 4% 0% 0% 0%; " required>
+                        <input type="submit" value="Post" style="width: 20%; margin: 4% 0% 0% 0%;">
+                    </form>
                 </div>
 
 
+
+
+
+
+
+
+
+
             </div>
+
+
 
 
             <!-- -- Blog View Modal -- -->
@@ -131,9 +188,15 @@
 
             </div>
             <!-- -- Blog View Modal end here -- -->
+
+
+
             {% endfor %}
 
         </div>
+
+
+
 
 
 
@@ -394,6 +457,47 @@
             }
             window.location.href = url;
         }
+
+        function openCommentModal(blogId) {
+            // Get the modal element
+            var modal = document.getElementById("commentViewDiv_" + blogId);
+
+            // Display the modal
+            if (modal) {
+                modal.style.display = "block";
+            }
+
+            // Get the <span> element that closes the modal
+            var span = modal.querySelector(".blogViewClose");
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+
+        function toggleComment(icon) {
+            // Get the parent blog_content div
+            var blogContent = icon.closest('.blog_content');
+            // Find the .comment div within the same parent
+            var commentSection = blogContent.querySelector('.comment_container');
+
+            // Toggle the visibility of the comment section
+            if (commentSection.style.display === 'none') {
+                commentSection.style.display = 'block';
+            } else {
+                commentSection.style.display = 'none';
+            }
+        }
+
 
 
 
