@@ -6,5 +6,10 @@ from sqlalchemy import create_engine
 engine = create_engine('mysql://root:mysql@localhost/blogu')
 
 def db_session():
-    conn = Session(engine)
-    return conn
+    try:
+        conn = Session(engine)
+        print ("connected")
+        return conn
+    
+    except Exception as err:
+        return {"details": str(err)}
