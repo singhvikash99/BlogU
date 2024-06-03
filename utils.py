@@ -6,7 +6,7 @@ import random
 import string
 
 mail_id = "singhvikashh003@gmail.com"
-mail_pass = "qdedxnyxjddqjqbh"
+gmail_app_pass = "qdedxnyxjddqjqbh"
 
 
 def get_hashed_pass(plain_pass):

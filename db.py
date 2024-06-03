@@ -1,14 +1,14 @@
-#importing required modules
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 
-#connecting to databse
-engine = create_engine('mysql://root:mysql@localhost/blogu')
+from models import Base
+
+engine = create_engine('sqlite:///blogu.db')
 
 def db_session():
     try:
+        Base.metadata.create_all(engine)
         conn = Session(engine)
-        print ("connected")
         return conn
     
     except Exception as err:
